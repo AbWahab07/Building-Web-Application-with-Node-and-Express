@@ -1,0 +1,36 @@
+configure .npmrc file to save the npm installs  automatically to package.json
+
+- Module First Page
+use debug() from debug module instead of using console.log() in your program
+use chalk to color the writings.
+
+express.static() is used to configure the source of static files
+path.join() concatenates the passed string arguments into a valid path.
+
+
+- Module Setting up Tooling
+use "npm start" to run the code [Hint: Look at scripts section of package.json]
+
+use "npm install eslint" [Hint: configure eslint by installing eslint local to the project]
+run "eslint --init" and choose USE a popular style guide
+use Airbnb style guide when eslint asks 
+use "npm run lint" to check for linting errors [Hint: Look at scripts section of package.json]
+
+To rename 
+  double click and press ctrl+f2
+
+Nodemon 
+  Automatic restarting of application by typing rs
+  Ignoring specific files or directories.
+  update npm start script by placing nodemon in place of node [Hint: Look at "start" script of package.json]
+  Add Nodemon config in package.json [Hint: Look at the nodemonConfig section of package.json]
+
+
+- Module Templating Engines
+  Two options are PUG and EJS
+
+  PUG
+    For Syntax refer to src/views/index.pug file
+    run "npm install pug"
+    and configure express to use PUG as a view engine [Hint: See app.js file app.set('view engine', 'pug');] 
+    
