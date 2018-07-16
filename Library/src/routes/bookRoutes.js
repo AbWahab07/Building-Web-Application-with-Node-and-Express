@@ -6,82 +6,46 @@ const sql = require('mssql');
 
 // const debug = require('debug')('app:bookRoutes');
 
+// nav is passed to avoid duplicating nav array in render function of all the registered routes
 function router(nav) {
-  const books = [
-    {
-      title: 'War and Peace',
-      genre: 'Historical Fiction',
-      author: 'Lev Nikolayevich Tolstoy',
-      read: false
-    },
-    {
-      title: 'Les Misérables',
-      genre: 'Historical Fiction',
-      author: 'Victor Hugo',
-      read: false
-    },
-    {
-      title: 'The Time Machine',
-      genre: 'Science Fiction',
-      author: 'H. G. Wells',
-      read: false
-    },
-    {
-      title: 'A Journey into the Center of the Earth',
-      genre: 'Science Fiction',
-      author: 'Jules Verne',
-      read: false
-    },
-    {
-      title: 'The Dark World',
-      genre: 'Fantasy',
-      author: 'Henry Kuttner',
-      read: false
-    },
-    {
-      title: 'The Wind in the Willows',
-      genre: 'Fantasy',
-      author: 'Kenneth Grahame',
-      read: false
-    },
-    {
-      title: 'Life On The Mississippi',
-      genre: 'History',
-      author: 'Mark Twain',
-      read: false
-    },
-    {
-      title: 'Childhood',
-      genre: 'Biography',
-      author: 'Lev Nikolayevich Tolstoy',
-      read: false
-    }
-  ];
   bookRouter.route('/')
     .get((req, res) => {
+      // used async/await instead of promises
       (async function query() {
         const request = new sql.Request();
-        const result = await request.query('select * from books');
+        const { recordset } = await request.query('select * from books'); // Destructuring
         // debug(result);
         res.render(
           'bookListView',
           {
             nav,
             title: 'Library',
-            books: result.recordset
-          }
+            books: recordset
+          } // Object is passed as a second argument [Hint: Refer to render() definations in docs]
         );
       }());
     });
   bookRouter.route('/:id')
+    .all((req, res, next) => {
+      (async function query() {
+        const { id } = req.params; // Destructuring
+        const request = new sql.Request();
+        const { recordset } = await request
+          .input('id', sql.Int, id)
+          .query('select * from books where id = @id');
+        // req.record = recordset[0];
+        [req.record] = recordset; // Array destructuring. It means the same as above line of code req.record = recordset[0];
+        next();
+      }());
+    })
+
     .get((req, res) => {
-      const { id } = req.params;
       res.render(
         'bookView',
         {
           nav,
           title: 'Library',
-          book: books[id]
+          book: req.record // we use 0 index as only one record is returned
         }
       );
     });
