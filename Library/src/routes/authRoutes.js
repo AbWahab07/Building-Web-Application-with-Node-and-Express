@@ -1,9 +1,10 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const debug = require('debug')('app:authRoutes');
+const passport = require('passport');
 
 const authRouter = express.Router();
-function router() {
+function router(nav) {
   authRouter.route('/signUp')
     .post((req, res) => {
       debug(req.body);
@@ -34,7 +35,28 @@ function router() {
       }());
     });
 
+  authRouter.route('/signin')
+    .get((req, res) => {
+      res.render('signin',
+        {
+          nav,
+          title: 'Sign In'
+        });
+    })
+    .post(passport.authenticate('local', {
+      successRedirect: '/auth/profile',
+      failureRedirect: '/'
+    }));
+
   authRouter.route('/profile')
+    // protecting /profile route from unauthorized users.
+    .all((req, res, next) => {
+      if (req.user) {
+        next();
+      } else {
+        res.redirect('/');
+      }
+    })
     .get((req, res) => {
       // req.user is provided by done() of passport.js
       // passport.js gets it from done() of local.strategy.js

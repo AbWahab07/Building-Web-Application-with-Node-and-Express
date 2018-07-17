@@ -1,5 +1,5 @@
 const passport = require('passport');
-require('./strategies/local.strategy');
+require('./strategies/local.strategy')();
 
 function passportConfig(app) {
   // Middleware [Hint: Refer to the docs on https://www.npmjs.com/package/passport]
