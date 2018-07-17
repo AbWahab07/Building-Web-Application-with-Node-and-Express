@@ -8,6 +8,13 @@ const debug = require('debug')('app:bookRoutes');
 
 // nav is passed to avoid duplicating nav array in render function of all the registered routes
 function router(nav) {
+  bookRouter.use((req, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.redirect('/');
+    }
+  });
   bookRouter.route('/')
     .get((req, res) => {
       const url = 'mongodb://localhost:27017';
