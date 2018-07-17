@@ -3,29 +3,17 @@ const chalk = require('chalk'); // To setup chalk (used for coloring)
 const debug = require('debug')('app'); // To setup debug() and avoid console.log()
 const morgan = require('morgan'); // Log somethings to the console that have to do with our web traffic. Helpful in debugging
 const path = require('path'); // Built-in Module. Used for concatinating strings to form a valid path.
-const sql = require('mssql');
-
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Azure Database Config array
-const config = {
-  user: 'library',
-  password: 'Libr@ry1',
-  server: 'pablibrary.database.windows.net',
-  database: 'PSLibrary',
-
-  options: {
-    encrypt: true // Use this if you're on Windows Azure
-  }
-};
-// Making Connection to Azure database
-sql.connect(config).catch(err => debug(`Error ${err}`));
-
 
 // Middleware
 app.use(morgan('tiny')); // Logs info about the web traffic
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use((req, res, next) => {
   debug('my middleware');
   next();
@@ -52,9 +40,13 @@ const nav = [
   { link: '/authors', title: 'Authors' }
 ];
 const bookRouter = require('./src/routes/bookRoutes')(nav);
+const adminRouter = require('./src/routes/adminRoutes')(nav);
+const authRouter = require('./src/routes/authRoutes')(nav);
+
 
 app.use('/books', bookRouter);
-
+app.use('/admin', adminRouter);
+app.use('/auth', authRouter);
 app.get('/', (req, res) => {
   // res.send('Hello from the App');
   // res.sendFile(path.join(__dirname, 'views', 'index.html')); // Sending HTML file to the server

@@ -34,3 +34,11 @@ Nodemon
     run "npm install pug"
     and configure express to use PUG as a view engine [Hint: See app.js file app.set('view engine', 'pug');] 
     
+
+- Module Databases
+
+  MongoDB
+    open mongo.exe 
+    run 'show dbs'
+    run 'use libraryApp'
+    run 'db.books.find().pretty()'
