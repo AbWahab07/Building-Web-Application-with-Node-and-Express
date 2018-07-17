@@ -42,3 +42,15 @@ Nodemon
     run 'show dbs'
     run 'use libraryApp'
     run 'db.books.find().pretty()'
+
+- Module Authentication
+  Passport
+    Maitains user object in session
+      it usese two functions to do that 
+        serializeUser() 
+          stores user in the session
+        deserializeUser()
+          retrieves the user from the session
+    
+    Puts user object in cookie, pulls from the cookie etc.
+    install passport, cookie-parser and express-session
